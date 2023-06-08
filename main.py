@@ -81,17 +81,56 @@ def get_num_Abl(point_list):
 
     return return_val
 
+
 def get_ex_num_Abl(point_list):
-    pass
+    prev_point = point_list[1][0]
+
+    for i in range(1, len(point_list[0])):
+        if prev_point >= 0 and point_list[1][i] < 0:
+            print("found max")
+        if prev_point < 0 and point_list[1][i] >= 0:
+            print("found min")
+
+        prev_point = point_list[1][i]
+
+
+def readfile(filename):
+    return np.loadtxt(filename, skiprows=3)
+
+
+def do_weather():
+    datafile = readfile("data.txt")
+
+    tx_val = datafile[:, 6]  # Erdboden
+    rr_val = datafile[:, 12]  # Niederschlagsmenge
+
+    x = np.arange(start=0, stop=len(tx_val), step=1)
+
+    real_point_list = [x, tx_val]
+
+    points_of_num_Abl = get_num_Abl(real_point_list)
+    points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
+
+    fig, ax1 = plt.subplots()
+
+    color = 'tab:red'
+    ax1.set_xlabel('Zeitpunkt')
+    ax1.set_ylabel('Temp', color=color)
+    ax1.plot(x, tx_val, 'r.')
+    ax1.tick_params(axis='y', labelcolor=color)
+
+    plt.show()
 
 
 if __name__ == '__main__':
-    zero_pointer = [1, 2, 3]
-    function = np.poly1d(zero_pointer, True)
+    zero_pointer = [1, 0, 0]
+    function = np.poly1d(zero_pointer)
 
-    points_of_fun = get_points_of_function(function, 1, -10, 10)
+    points_of_fun = get_points_of_function(sin, 0.001, -10, 10)
     points_of_num_Abl = get_num_Abl(points_of_fun)
-    points_of_ex_num_Abl = get_ex_num_Abl
+    #points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
+
+    do_weather()
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
