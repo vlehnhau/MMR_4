@@ -93,6 +93,9 @@ def get_ex_num_Abl(point_list):
 
         prev_point = point_list[1][i]
 
+def sin1(x):
+    return sin(1/x)
+
 
 def readfile(filename):
     return np.loadtxt(filename, skiprows=3)
@@ -108,7 +111,10 @@ def do_weather():
 
     real_point_list = [x, tx_val]
 
-    points_of_num_Abl = get_num_Abl(real_point_list)
+    fun = np.poly1d(np.polyfit(real_point_list[0], real_point_list[1], 5))
+
+    points_of_fun = get_points_of_function(fun, 1, 0, 500)
+    points_of_num_Abl = get_num_Abl(points_of_fun)
     points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
 
     fig, ax1 = plt.subplots()
@@ -116,7 +122,7 @@ def do_weather():
     color = 'tab:red'
     ax1.set_xlabel('Zeitpunkt')
     ax1.set_ylabel('Temp', color=color)
-    ax1.plot(x, tx_val, 'r.')
+    ax1.plot(points_of_fun[0], points_of_fun[1], color=color)
     ax1.tick_params(axis='y', labelcolor=color)
 
     plt.show()
@@ -126,11 +132,11 @@ if __name__ == '__main__':
     zero_pointer = [1, 0, 0]
     function = np.poly1d(zero_pointer)
 
-    points_of_fun = get_points_of_function(sin, 0.001, -10, 10)
+    points_of_fun = get_points_of_function(sin1, 0.001, -10, 10)
     points_of_num_Abl = get_num_Abl(points_of_fun)
-    #points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
+    points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
 
-    do_weather()
+    #do_weather()
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
