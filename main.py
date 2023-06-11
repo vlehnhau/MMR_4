@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.polynomial.polynomial as poly
 from math import *
 
 
@@ -116,7 +117,6 @@ def do_weather():
     datafile = readfile("data.txt")
 
     tx_val = datafile[:, 6]  # Erdboden
-    rr_val = datafile[:, 12]  # Niederschlagsmenge
 
     x = np.arange(start=0, stop=len(tx_val), step=1)
 
@@ -139,6 +139,45 @@ def do_weather():
     ax1.plot(x, tx_val, 'b.')
     ax1.tick_params(axis='y', labelcolor=color)
 
+    plt.show()
+
+def do_weathertwo():
+    datafile = readfile("data.txt")
+
+    y = datafile[:, 6]  # Erdboden
+    x = np.arange(start=0, stop=len(y), step=1)
+    h=10
+
+    new_x = []
+    funs = []
+
+    for i in range(len(y)):
+        new_x.append(i)
+
+        if (i-h // 2) < 0:
+            start = 0
+        else:
+            start = i-h // 2
+
+        if i+h // 2 > len(y):
+            end = len(y) - 1
+        else:
+            end = i+h // 2
+
+        funs.append(np.polyfit(x[start:end], y[start:end],5))
+
+    new_y = []
+
+    for i in range(len(y)):
+        new_y.append(poly.Polynomial(funs[i])(i))
+
+    points_of_fun = [new_x, new_y]
+
+    fig, ax1 = plt.subplots()
+    plt.autoscale(False)
+    plt.xlim([-10, 10])
+    plt.ylim([-10, 10])
+    ax1.plot(points_of_fun[0], points_of_fun[1], 'r.')
     plt.show()
 
 
@@ -199,3 +238,5 @@ if __name__ == '__main__':
     plt.show()
 
     do_weather()
+
+    do_weathertwo()
