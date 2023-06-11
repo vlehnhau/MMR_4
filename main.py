@@ -13,7 +13,7 @@ from math import *
 # coe = [2, 3, -4, 1]
 # coeAbl = [6, 6, -4]
 
-# print(np.poly1d(coe))
+# #print(np.poly1d(coe))
 
 # start = -10
 # stop = 10
@@ -26,9 +26,9 @@ from math import *
 # step_size = (stop - start) / (num - 1)
 
 # Ausgabe der berechneten Werte
-# print("Function")
+# #print("Function")
 # for x, y in zip(x_values, y_values):
-#    print(f"Für x = {x:.2f} ist y = {y:.2f}")
+#    #print(f"Für x = {x:.2f} ist y = {y:.2f}")
 
 
 # numerische Ableitung
@@ -39,9 +39,9 @@ from math import *
 
 # nAbl = num_Abl(y_values, step_size)
 
-# print("Ableitung")
+# #print("Ableitung")
 # for x, y in zip(nAbl, y_values):
-#    print(f"Für x = {x:.2f} ist y = {y:.2f}")
+#    #print(f"Für x = {x:.2f} ist y = {y:.2f}")
 
 # fig = plt.figure()
 # ax = fig.add_subplot(111)
@@ -87,9 +87,9 @@ def get_ex_num_Abl(point_list):
 
     for i in range(1, len(point_list[0])):
         if prev_point >= 0 and point_list[1][i] < 0:
-            print("found max")
+            #print("found max")
         if prev_point < 0 and point_list[1][i] >= 0:
-            print("found min")
+            #print("found min")
 
         prev_point = point_list[1][i]
 

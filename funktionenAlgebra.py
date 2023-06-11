@@ -111,32 +111,32 @@ g = Function(lambda x: x+1)
 
 #Test Add
 Addfg = AddFunction(f, g)
-print(f(3) + g(2))              #3*2 + 2+1 = 9
-print(Addfg(1))                 #1*2 + 1+1 = 4
+#print(f(3) + g(2))              #3*2 + 2+1 = 9
+#print(Addfg(1))                 #1*2 + 1+1 = 4
 
 #Test Sub
 Subfg = SubFunction(f, g)
-print(f(3) - g(2))              #3*2 - 2+1 = 3
-print(Subfg(1))                 #1*2 - 1+1 = 0
+#print(f(3) - g(2))              #3*2 - 2+1 = 3
+#print(Subfg(1))                 #1*2 - 1+1 = 0
 
 #Test Mul
 Mulfg = MulFunction(f, g)
-print(f(3) * g(2))              #3*2 * 2+1 = 18
-print(Mulfg(1))                 #1*2 * 1+1 = 4
+#print(f(3) * g(2))              #3*2 * 2+1 = 18
+#print(Mulfg(1))                 #1*2 * 1+1 = 4
 
 #Test Div
 Divfg = DivFunction(f, g)
-print(f(3) / g(2))              #3*2 / 2+1 = 2
-print(Divfg(1))                 #1*2 / 1+1 = 1
+#print(f(3) / g(2))              #3*2 / 2+1 = 2
+#print(Divfg(1))                 #1*2 / 1+1 = 1
 
 #Test Pow
 Powfg = PowFunction(f, g)
-print(f(3) ** g(2))             #3*2 ** 2+1 = 216
-print(Powfg(1))                 #1*2 ** 1+1 = 4
+#print(f(3) ** g(2))             #3*2 ** 2+1 = 216
+#print(Powfg(1))                 #1*2 ** 1+1 = 4
 
 #Test Matmul
 Matmulfg = MatmulFunction(f, g)
-print(Matmulfg(3))                 #(3+1)*2 = 8
+#print(Matmulfg(3))                 #(3+1)*2 = 8
 
 
 
@@ -149,7 +149,7 @@ ln = Function(lambda x: math.log(x))
 
 
 f = sin / cos + exp
-print(f(42), " == ", math.sin(42) / math.cos(42) + math.exp(42))
+#print(f(42), " == ", math.sin(42) / math.cos(42) + math.exp(42))
 
 def beispielFunktion():
     f = Function(lambda x: np.sin(cos(x) + x ** 2))
