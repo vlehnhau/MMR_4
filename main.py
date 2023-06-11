@@ -4,9 +4,6 @@ from math import *
 
 
 # Aufgabe 4.1.1
-
-# toDo: Theoriefragen
-
 # a)
 
 # Hier 2x^3 + 3x^2 - 4x + 1
@@ -81,15 +78,23 @@ def get_num_Abl(point_list):
 
     return return_val
 
+def get_num_Abl2(point_list):
+    return_val = [[], []]
+    step_size = point_list[0][1] - point_list[0][0]
+    y_val = np.array(point_list[1])
+    return_val[0] = point_list[0][:-1]
+    return_val[1] = (y_val[1:] - y_val[:-1]) / step_size
+
+    return return_val
 
 def get_ex_num_Abl(point_list):
     prev_point = point_list[1][0]
 
     for i in range(1, len(point_list[0])):
         if prev_point >= 0 and point_list[1][i] < 0:
-            #print("found max")
+            print("found max")
         if prev_point < 0 and point_list[1][i] >= 0:
-            #print("found min")
+            print("found min")
 
         prev_point = point_list[1][i]
 
@@ -136,7 +141,7 @@ if __name__ == '__main__':
     points_of_num_Abl = get_num_Abl(points_of_fun)
     points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
 
-    #do_weather()
+    do_weather()
 
     fig = plt.figure()
     ax = fig.add_subplot(111)

@@ -1,5 +1,6 @@
 from math import *
 from funktionenAlgebra import *
+from main import *
 
 
 class DualNumber:
@@ -18,7 +19,9 @@ class DualNumber:
         return DualNumber(self.wert * other.wert, self.ableitung * other.wert + self.wert * other.ableitung)
 
     def __truediv__(self, other):
-        return DualNumber(self.wert / other.wert, self.ableitung / other.wert + self.wert / other.ableitung)
+        # (f/g)' = (f'g - fg') / g^2
+        return DualNumber(self.wert / other.wert,
+                          (self.ableitung * other.wert - self.wert * other.ableitung) / (other.wert ** 2))
 
     def __pow__(self, power, modulo=None):
         # (f^n)' = n * f^(n-1) * f'.
@@ -26,8 +29,7 @@ class DualNumber:
 
 
 class DualFunction(Function):
-    def __call__(self, x: DualNumber):
-        pass
+    pass
 
 
 class Sin(DualFunction):
@@ -41,8 +43,9 @@ class Cos(DualFunction):
 
 
 class Tan(DualFunction):
-    def __call__(self, x):
-        return DualNumber(tan(x.wert), (1 / (cos(x.wert)) ** 2) * x.ableitung)
+    def __call__(self, x: DualNumber):
+        cos_val = cos(x.wert)
+        return DualNumber(math.tan(x.wert), x.ableitung / (cos_val ** 2))
 
 
 class Exp(DualFunction):
@@ -52,11 +55,60 @@ class Exp(DualFunction):
 
 class Ln(DualFunction):
     def __call__(self, x):
-        return DualNumber(ln(x.wert), (1 / x.wert) * x.ableitung)
+        return DualNumber(log(x.wert), (1 / x.wert) * x.ableitung)
+
+
+class SinOne(DualFunction):
+    def __call__(self, x: DualNumber):
+        return DualNumber(math.sin(1 / x.wert), -math.cos(1 / x.wert) / (x.wert * x.wert))
 
 
 if __name__ == '__main__':
-    for i in range(500):
+    faketan = Tan()
+    fakesin = Sin()
+    fakecos = Cos()
+    faketan_two = fakesin / fakecos
+    fakesinone = SinOne()
+
+    tanpoints = []
+    tanfakepoints = []
+    sinonefakepoints = []
+
+    val_x = []
+
+    i = -500
+
+    while i < 500:
         x = DualNumber(i, 1)
-        tan_val = Tan(x)
-        print("(", tan(i), ", ", tan_val.wert, ", ")
+
+        tan_val = faketan(x)
+        faketan_val = faketan_two(x)
+        sinone_val = fakesinone(x)
+
+        sinonefakepoints.append(sinone_val.wert)
+        tanpoints.append(tan_val.wert)
+        tanfakepoints.append(faketan_val.wert)
+        # print("(", tan(i), ", ", tan_val.wert, ", ", faketan_val.wert, ")")
+
+        val_x.append(i)
+
+
+        i += 0.001
+
+    fig, ax1 = plt.subplots()
+    plt.autoscale(False)
+    plt.xlim([-10, 10])
+    plt.ylim([-10, 10])
+    ax1.plot(val_x, tanpoints, "r")
+    ax1.plot(val_x, tanfakepoints, "b")
+    plt.show()
+
+    points_of_fun = get_points_of_function(sin1, 0.001, -10, 10)
+
+    fig, ax2 = plt.subplots()
+    plt.autoscale(False)
+    plt.xlim([-10, 10])
+    plt.ylim([-2.5, 2.5])
+    ax2.plot(points_of_fun[0], points_of_fun[1], "b")
+    ax2.plot(val_x, sinonefakepoints, "r")
+    plt.show()
