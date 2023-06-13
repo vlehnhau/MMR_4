@@ -30,12 +30,18 @@ class AddFunction(Function):
     def __call__(self, x):
         return self.f(x) + self.g(x)
 
+    def __str__(self):
+        return str("AddFunction(" + str(self.f) + ", " + str(self.g) + ")")
+
 class SubFunction(Function):
     def __init__(self, f, g):
         self.f = f
         self.g = g
     def __call__(self, x):
         return self.f(x) - self.g(x)
+
+    def __str__(self):
+        return str("SubFunction(" + str(self.f) + ", " + str(self.g) + ")")
 
 class MulFunction(Function):
     def __init__(self, f, g):
@@ -44,6 +50,9 @@ class MulFunction(Function):
     def __call__(self, x):
         return self.f(x) * self.g(x)
 
+    def __str__(self):
+        return str("MulFunction(" + str(self.f) + ", " + str(self.g) + ")")
+
 class DivFunction(Function):
     def __init__(self, f, g):
         self.f = f
@@ -51,12 +60,17 @@ class DivFunction(Function):
     def __call__(self, x):
         return self.f(x) / self.g(x)
 
+    def __str__(self):
+        return str("DivFunction(" + str(self.f) + ", " + str(self.g) + ")")
+
 class PowFunction(Function):
     def __init__(self, f, g):
         self.f = f
         self.g = g
     def __call__(self, x):
         return self.f(x) ** self.g(x)
+    def __str__(self):
+        return str("PowFunction(" + str(self.f) + ", " + str(self.g) + ")")
 
 class MatmulFunction(Function):
     def __init__(self, f, g):
@@ -64,6 +78,8 @@ class MatmulFunction(Function):
         self.g = g
     def __call__(self, x):
         return self.f(self.g(x))
+    def __str__(self):
+        return str("MatMulFunction(" + str(self.f) + ", " + str(self.g) + ")")
 
 
 
