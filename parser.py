@@ -18,11 +18,11 @@ def parse1(string: str):
                 return DivFunction(parser([string[1]]), parser(string[2:]))
         else:
             nn = 2                                #nn: Numbers needed. Trifft man auf einen Operator braucht es 2 Zeichen. Bei jeden Zusätzlichen Operator: nn += 1
-            i = 1
-            for y in range(1, len(string)):
-                if y in operators:
+            i = 1                                 # +(+(1, 1), 1)  +(+11)1
+            for y in range(2, len(string)):
+                if string[y] in operators:
                     nn += 1
-                elif y in symbols:
+                elif string[y] in symbols:
                     nn -= 1
                 if nn == 0:
                     if sym == "+":
@@ -103,5 +103,6 @@ if __name__ == '__main__':
     expression = "+ 1 + 1 - 2.3 * 2 x"
     tokens = lexAn(expression)
     print(parse1("+1+1-2*2x"))
+    print(parse1("++111"))
     print(tokens)
     print(parser(tokens))
