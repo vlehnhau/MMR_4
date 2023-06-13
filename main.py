@@ -79,6 +79,7 @@ def get_num_Abl(point_list):
 
     return return_val
 
+
 def get_num_Abl2(point_list):
     return_val = [[], []]
     step_size = point_list[0][1] - point_list[0][0]
@@ -87,6 +88,7 @@ def get_num_Abl2(point_list):
     return_val[1] = (y_val[1:] - y_val[:-1]) / step_size
 
     return return_val
+
 
 def get_ex_num_Abl(point_list, real_points):
     prev_point = point_list[1][0]
@@ -105,8 +107,9 @@ def get_ex_num_Abl(point_list, real_points):
 
     return [min, max]
 
+
 def sin1(x):
-    return sin(1/x)
+    return sin(1 / x)
 
 
 def readfile(filename):
@@ -134,50 +137,64 @@ def do_weather():
     ax1.set_xlabel('Zeitpunkt')
     ax1.set_ylabel('Temp', color=color)
     ax1.plot(points_of_fun[0], points_of_fun[1], color=color)
-    ax1.plot(points_of_ex_num_Abl[0][0], points_of_ex_num_Abl[0][1], 'g.')
-    ax1.plot(points_of_ex_num_Abl[1][0], points_of_ex_num_Abl[1][1], 'g.')
+    # ax1.plot(points_of_ex_num_Abl[0][0], points_of_ex_num_Abl[0][1], 'g.')
+    # ax1.plot(points_of_ex_num_Abl[1][0], points_of_ex_num_Abl[1][1], 'g.')
     ax1.plot(x, tx_val, 'b.')
     ax1.tick_params(axis='y', labelcolor=color)
 
     plt.show()
+
 
 def do_weathertwo():
     datafile = readfile("data.txt")
 
     y = datafile[:, 6]  # Erdboden
     x = np.arange(start=0, stop=len(y), step=1)
-    h=10
+    h = 20
 
     new_x = []
-    funs = []
+    func_list = []
 
     for i in range(len(y)):
         new_x.append(i)
 
-        if (i-h // 2) < 0:
+        if (i - h // 2) < 0:
             start = 0
         else:
-            start = i-h // 2
+            start = i - h // 2
 
-        if i+h // 2 > len(y):
+        if i + h // 2 > len(y):
             end = len(y) - 1
         else:
-            end = i+h // 2
+            end = i + h // 2
 
-        funs.append(np.polyfit(x[start:end], y[start:end],5))
+        func_list.append(np.poly1d(np.polyfit(x[start:end], y[start:end], 5)))
 
     new_y = []
 
-    for i in range(len(y)):
-        new_y.append(poly.Polynomial(funs[i])(i))
+    for i, (func, j) in enumerate(zip(func_list, x)):
+        y = func(j)
+        new_y.append(y)
 
-    points_of_fun = [new_x, new_y]
+    points_of_fun_fake = [new_x, new_y]
+
+    fun = np.poly1d(np.polyfit(points_of_fun_fake[0], points_of_fun_fake[1], 5))
+
+    points_of_fun = get_points_of_function(fun, 1, 0, 500)
+    points_of_num_Abl = get_num_Abl(points_of_fun)
+    points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl, points_of_fun)
 
     fig, ax1 = plt.subplots()
-    plt.autoscale(False)
-    plt.xlim([-10, 10])
-    plt.ylim([-10, 10])
-    ax1.plot(points_of_fun[0], points_of_fun[1], 'r.')
+
+    color = 'tab:red'
+    ax1.set_xlabel('Zeitpunkt')
+    ax1.set_ylabel('Temp', color=color)
+    ax1.plot(points_of_fun[0], points_of_fun[1], color=color)
+    # ax1.plot(points_of_ex_num_Abl[0][0], points_of_ex_num_Abl[0][1], 'g.')
+    # ax1.plot(points_of_ex_num_Abl[1][0], points_of_ex_num_Abl[1][1], 'g.')
+    ax1.plot(x, datafile[:, 6], 'b.')
+    ax1.tick_params(axis='y', labelcolor=color)
+
     plt.show()
 
 
@@ -200,7 +217,7 @@ if __name__ == '__main__':
     plt.xlim([-10, 10])
     plt.ylim([-10, 10])
     ax1.plot(points_of_fun[0], points_of_fun[1], 'r')
-    ax1.plot(points_of_num_Abl[0], points_of_num_Abl[1],'b')
+    ax1.plot(points_of_num_Abl[0], points_of_num_Abl[1], 'b')
     ax1.plot(points_of_num_Abl2[0], points_of_num_Abl2[1], 'g')
     ax1.plot(x, y, 'y')
     ax1.plot(points_of_ex_num_Abl[0][0], points_of_ex_num_Abl[0][1], 'r.')
