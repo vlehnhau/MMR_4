@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.polynomial.polynomial as poly
 from math import *
 
 
@@ -87,16 +88,22 @@ def get_num_Abl2(point_list):
 
     return return_val
 
-def get_ex_num_Abl(point_list):
+def get_ex_num_Abl(point_list, real_points):
     prev_point = point_list[1][0]
+
+    min = [[], []]
+    max = [[], []]
 
     for i in range(1, len(point_list[0])):
         if prev_point >= 0 and point_list[1][i] < 0:
-            print("found max")
+            min[0].append(point_list[0][i])
+            min[1].append(real_points[1][i])
         if prev_point < 0 and point_list[1][i] >= 0:
-            print("found min")
-
+            max[0].append(point_list[0][i])
+            max[1].append(real_points[1][i])
         prev_point = point_list[1][i]
+
+    return [min, max]
 
 def sin1(x):
     return sin(1/x)
@@ -110,7 +117,6 @@ def do_weather():
     datafile = readfile("data.txt")
 
     tx_val = datafile[:, 6]  # Erdboden
-    rr_val = datafile[:, 12]  # Niederschlagsmenge
 
     x = np.arange(start=0, stop=len(tx_val), step=1)
 
@@ -120,7 +126,7 @@ def do_weather():
 
     points_of_fun = get_points_of_function(fun, 1, 0, 500)
     points_of_num_Abl = get_num_Abl(points_of_fun)
-    points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
+    points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl, points_of_fun)
 
     fig, ax1 = plt.subplots()
 
@@ -128,22 +134,109 @@ def do_weather():
     ax1.set_xlabel('Zeitpunkt')
     ax1.set_ylabel('Temp', color=color)
     ax1.plot(points_of_fun[0], points_of_fun[1], color=color)
+    ax1.plot(points_of_ex_num_Abl[0][0], points_of_ex_num_Abl[0][1], 'g.')
+    ax1.plot(points_of_ex_num_Abl[1][0], points_of_ex_num_Abl[1][1], 'g.')
+    ax1.plot(x, tx_val, 'b.')
     ax1.tick_params(axis='y', labelcolor=color)
 
     plt.show()
 
+def do_weathertwo():
+    datafile = readfile("data.txt")
+
+    y = datafile[:, 6]  # Erdboden
+    x = np.arange(start=0, stop=len(y), step=1)
+    h=10
+
+    new_x = []
+    funs = []
+
+    for i in range(len(y)):
+        new_x.append(i)
+
+        if (i-h // 2) < 0:
+            start = 0
+        else:
+            start = i-h // 2
+
+        if i+h // 2 > len(y):
+            end = len(y) - 1
+        else:
+            end = i+h // 2
+
+        funs.append(np.polyfit(x[start:end], y[start:end],5))
+
+    new_y = []
+
+    for i in range(len(y)):
+        new_y.append(poly.Polynomial(funs[i])(i))
+
+    points_of_fun = [new_x, new_y]
+
+    fig, ax1 = plt.subplots()
+    plt.autoscale(False)
+    plt.xlim([-10, 10])
+    plt.ylim([-10, 10])
+    ax1.plot(points_of_fun[0], points_of_fun[1], 'r.')
+    plt.show()
+
 
 if __name__ == '__main__':
-    zero_pointer = [1, 0, 0]
+    zero_pointer = [0.5, -3, 5, -2, 0.5]
     function = np.poly1d(zero_pointer)
+
+    points_of_fun = get_points_of_function(function, 0.001, -100, 100)
+    points_of_num_Abl = get_num_Abl(points_of_fun)
+    points_of_num_Abl2 = get_num_Abl2(points_of_fun)
+
+    points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl, points_of_fun)
+
+    real_abl = np.poly1d([2, -9, 10, -2])
+    x = np.linspace(-100, 100, 1000)
+    y = real_abl(x)
+
+    fig, ax1 = plt.subplots()
+    plt.autoscale(False)
+    plt.xlim([-10, 10])
+    plt.ylim([-10, 10])
+    ax1.plot(points_of_fun[0], points_of_fun[1], 'r')
+    ax1.plot(points_of_num_Abl[0], points_of_num_Abl[1],'b')
+    ax1.plot(points_of_num_Abl2[0], points_of_num_Abl2[1], 'g')
+    ax1.plot(x, y, 'y')
+    ax1.plot(points_of_ex_num_Abl[0][0], points_of_ex_num_Abl[0][1], 'r.')
+    ax1.plot(points_of_ex_num_Abl[1][0], points_of_ex_num_Abl[1][1], 'r.')
+    plt.show()
+
+    points_of_fun = get_points_of_function(sin, 0.001, -10, 10)
+    points_of_num_Abl = get_num_Abl(points_of_fun)
+
+    x = np.linspace(-100, 100, 1000)
+    y = np.cos(x)
+
+    fig, ax1 = plt.subplots()
+    plt.autoscale(False)
+    plt.xlim([-10, 10])
+    plt.ylim([-10, 10])
+    ax1.plot(points_of_fun[0], points_of_fun[1], 'r')
+    ax1.plot(points_of_num_Abl[0], points_of_num_Abl[1], 'g')
+    ax1.plot(x, y, 'y')
+    plt.show()
 
     points_of_fun = get_points_of_function(sin1, 0.001, -10, 10)
     points_of_num_Abl = get_num_Abl(points_of_fun)
-    points_of_ex_num_Abl = get_ex_num_Abl(points_of_num_Abl)
+
+    x = np.linspace(-100, 100, 1000)
+    y = -np.cos(1 / x) / (x ** 2)
+
+    fig, ax1 = plt.subplots()
+    plt.autoscale(False)
+    plt.xlim([-10, 10])
+    plt.ylim([-10, 10])
+    ax1.plot(points_of_fun[0], points_of_fun[1], 'r')
+    ax1.plot(points_of_num_Abl[0], points_of_num_Abl[1], 'g')
+    ax1.plot(x, y, 'y')
+    plt.show()
 
     do_weather()
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.plot(points_of_num_Abl[0], points_of_num_Abl[1])
-    plt.show()
+    do_weathertwo()

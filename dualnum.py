@@ -1,4 +1,3 @@
-from math import *
 from funktionenAlgebra import *
 from main import *
 
